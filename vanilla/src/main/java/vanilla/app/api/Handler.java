@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -21,7 +22,7 @@ import static java.util.stream.Collectors.toList;
 import vanilla.app.errors.ApplicationExceptions;
 import vanilla.app.errors.GlobalExceptionHandler;
 
-public abstract class Handler {
+public abstract class Handler implements HttpHandler {
 
     private final ObjectMapper objectMapper;
     private final GlobalExceptionHandler exceptionHandler;
@@ -33,11 +34,14 @@ public abstract class Handler {
     }
 
     public abstract String url();
+    
+    public abstract boolean auth();
 
     public String getUrl() {
         return URL_PREFIX + url();
     }
 
+    @Override
     public void handle(HttpExchange exchange) {
         try {
             execute(exchange);

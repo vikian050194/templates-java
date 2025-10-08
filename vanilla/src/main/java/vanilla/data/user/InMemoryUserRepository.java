@@ -20,7 +20,7 @@ public class InMemoryUserRepository implements UserRepository {
 
     @Override
     public User create(User user) {
-        if (USERS_STORE.values().stream().anyMatch((u) -> u.login.equals(user.login))) {
+        if (USERS_STORE.values().stream().anyMatch((u) -> u.username.equals(user.username))) {
             return null;
         }
 
@@ -42,5 +42,13 @@ public class InMemoryUserRepository implements UserRepository {
     @Override
     public List<User> readAll() {
         return USERS_STORE.values().stream().toList();
+    }
+
+    public boolean checkCredentials(String username, String password) {
+        return USERS_STORE.values().stream().anyMatch((u) -> u.username.equals(username) && u.password.equals(password));
+    }
+
+    public List<String> fetchRoleList(String username) {
+        return List.of("USER");
     }
 }

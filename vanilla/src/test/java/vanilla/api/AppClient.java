@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Base64;
 import java.util.function.Supplier;
 import vanilla.app.api.user.RegistrationRequest;
 import vanilla.app.api.user.RegistrationResponse;
@@ -18,11 +19,16 @@ public class AppClient {
     private final String baseAddress;
     private final HttpClient client;
     private final ObjectMapper om;
+    private String token;
 
     public AppClient(String ba) {
         baseAddress = ba;
         client = HttpClient.newHttpClient();
         om = new ObjectMapper();
+    }
+
+    public void login(String username, String password) {
+        token = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
     }
 
     private URI getUri(String uri) throws URISyntaxException {
@@ -38,15 +44,16 @@ public class AppClient {
     }
 
     private HttpRequest getRequest(String uri) throws URISyntaxException {
-        return HttpRequest.newBuilder().GET().uri(getUri(uri)).build();
+        // TODO extract setHeader call
+        return HttpRequest.newBuilder().GET().uri(getUri(uri)).setHeader("Authorization", "Basic %s".formatted(token)).build();
     }
 
     private HttpRequest getRequest(String uri, String key, int value) throws URISyntaxException {
-        return HttpRequest.newBuilder().GET().uri(getUri(uri, key, value)).build();
+        return HttpRequest.newBuilder().GET().uri(getUri(uri, key, value)).setHeader("Authorization", "Basic %s".formatted(token)).build();
     }
 
     private HttpRequest getRequest(String uri, String key, String value) throws URISyntaxException {
-        return HttpRequest.newBuilder().GET().uri(getUri(uri, key, value)).build();
+        return HttpRequest.newBuilder().GET().uri(getUri(uri, key, value)).setHeader("Authorization", "Basic %s".formatted(token)).build();
     }
 
     private HttpRequest postRequest(String uri, byte[] data) throws URISyntaxException {

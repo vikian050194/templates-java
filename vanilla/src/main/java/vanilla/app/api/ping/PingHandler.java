@@ -27,4 +27,9 @@ public class PingHandler extends Handler {
         return new ResponseEntity<>(response,
                 getHeaders(Constants.CONTENT_TYPE, Constants.TEXT_HTML), StatusCode.OK);
     }
+
+    @Override
+    public boolean auth() {
+        return true;
+    }
 }

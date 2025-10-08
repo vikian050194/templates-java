@@ -22,6 +22,11 @@ public class HelloHandler extends Handler {
     }
 
     @Override
+    public boolean auth() {
+        return true;
+    }
+
+    @Override
     protected ResponseEntity<String> doGet(URI uri) {
         var params = splitQuery(uri.getRawQuery());
         var noNameText = "Anonymous";

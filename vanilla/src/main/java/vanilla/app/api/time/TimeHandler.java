@@ -23,6 +23,11 @@ public class TimeHandler extends Handler {
     }
 
     @Override
+    public boolean auth() {
+        return true;
+    }
+
+    @Override
     protected ResponseEntity<String> doGet(URI uri) {
         var response = DateFormat.getDateTimeInstance().format(new Date());
 

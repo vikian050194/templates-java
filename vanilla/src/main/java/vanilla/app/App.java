@@ -1,5 +1,6 @@
 package vanilla.app;
 
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -9,6 +10,8 @@ import vanilla.app.api.hello.HelloHandler;
 import vanilla.app.api.ping.PingHandler;
 import vanilla.app.api.time.TimeHandler;
 import vanilla.app.api.user.RegistrationHandler;
+import vanilla.app.auth.AuthenticatorFactory;
+import vanilla.app.auth.UserRoleAuthenticator;
 import vanilla.app.config.LoggerConfig;
 import vanilla.app.config.RuntimeConfig;
 import vanilla.app.config.RuntimeConfig.RunMode;
@@ -30,7 +33,17 @@ public final class App {
         }
     }
 
+    private void setAuthenticator(HttpContext c, UserRoleAuthenticator authenticator) {
+        if (((Handler) c.getHandler()).auth() == false) {
+            return;
+        }
+
+        c.setAuthenticator(authenticator);
+    }
+
     public void init(DependencyFactory df) {
+        var userRoleBasicAuthenticator = AuthenticatorFactory.createBasicAuthenticator(df.getUserRepository());
+
         var handlers = new ArrayList<Handler>();
         handlers.add(new PingHandler(df.getObjectMapper(),
                 df.getErrorHandler()));
@@ -41,7 +54,9 @@ public final class App {
         handlers.add(new RegistrationHandler(df.getUserService(), df.getObjectMapper(),
                 df.getErrorHandler()));
 
-        handlers.stream().forEach(h -> server.createContext(h.getUrl(), h::handle));
+        var contexts = handlers.stream().map(h -> server.createContext(h.getUrl(), h));
+
+        contexts.forEach(c -> setAuthenticator(c, userRoleBasicAuthenticator));
 
         if (!mode.equals(RunMode.TEST)) {
             seed(df);
@@ -77,6 +92,7 @@ public final class App {
         var httpPort = RuntimeConfig.port();
         var mode = RuntimeConfig.getInstance().runMode();
         var app = new App(httpPort, mode);
+
         DependencyFactory dependencyFactory = new DefaultDependencyFactory();
 
         seed(dependencyFactory);

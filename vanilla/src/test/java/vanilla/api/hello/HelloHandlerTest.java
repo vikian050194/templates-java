@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import vanilla.api.BaseApiTest;
+import vanilla.app.api.user.RegistrationRequest;
 
 class HelloHandlerTest extends BaseApiTest {
 
@@ -13,6 +14,10 @@ class HelloHandlerTest extends BaseApiTest {
         // Arrange
         var expectedStatus = 200;
         var expectedBody = "Hello, Anonymous!";
+
+        // TODO extract to BeforeEach
+        client.register(new RegistrationRequest("user", "pass"));
+        client.login("user", "pass");
 
         // Act
         var response = client.hello();
@@ -28,6 +33,9 @@ class HelloHandlerTest extends BaseApiTest {
         var name = "Alice";
         var expectedStatus = 200;
         var expectedBody = "Hello, Alice!";
+
+        client.register(new RegistrationRequest("user", "pass"));
+        client.login("user", "pass");
 
         // Act
         var response = client.hello(name);

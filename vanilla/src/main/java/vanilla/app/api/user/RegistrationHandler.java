@@ -23,14 +23,14 @@ public class RegistrationHandler extends Handler {
 
     @Override
     public String url() {
-        // TODO register+login or signup+signin
+        // TODO register+username or signup+signin
         return "register";
     }
-//
-//    @Override
-//    protected ResponseEntity<RegistrationResponse> doGet(URI uri) {
-//        throw new UnsupportedOperationException("Not supported yet.");
-//    }
+
+    @Override
+    public boolean auth() {
+        return false;
+    }
 
     @Override
     protected ResponseEntity<RegistrationResponse> doPost(URI uri, InputStream is) {

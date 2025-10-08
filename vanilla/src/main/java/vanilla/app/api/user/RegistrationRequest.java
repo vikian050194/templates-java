@@ -2,24 +2,24 @@ package vanilla.app.api.user;
 
 public class RegistrationRequest {
 
-    String login;
+    String username;
     String password;
 
     public RegistrationRequest() {
 
     }
 
-    public RegistrationRequest(String login, String password) {
-        this.login = login;
+    public RegistrationRequest(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
     public String getLogin() {
-        return login;
+        return username;
     }
 
     public void setLogin(String value) {
-        login = value;
+        username = value;
     }
 
     public String getPassword() {
