@@ -8,6 +8,7 @@ import vanilla.domain.user.UserRepository;
 public abstract class AuthenticatorFactory {
 
   public static UserRoleAuthenticator createBasicAuthenticator(UserRepository repository) {
+    // TODO is it OK to use Objects.require?
     Objects.requireNonNull(repository, "If UserRepository is null, authentication cannot work");
 
     var basicAuth = new BasicAuthenticator("vanilla") {

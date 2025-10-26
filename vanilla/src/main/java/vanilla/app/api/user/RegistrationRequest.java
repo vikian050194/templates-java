@@ -14,11 +14,11 @@ public class RegistrationRequest {
         this.password = password;
     }
 
-    public String getLogin() {
+    public String getUsername() {
         return username;
     }
 
-    public void setLogin(String value) {
+    public void setUsername(String value) {
         username = value;
     }
 

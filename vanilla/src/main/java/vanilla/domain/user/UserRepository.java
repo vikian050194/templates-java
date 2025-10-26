@@ -10,6 +10,8 @@ public interface UserRepository {
 
     List<User> readAll();
 
+    boolean exists(String username);
+
     boolean checkCredentials(String username, String password);
 
     List<String> fetchRoleList(String username);

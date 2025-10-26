@@ -16,4 +16,8 @@ public class UserService {
         return userRepository.read(userId);
     }
 
+    public boolean exists(String username) {
+        return userRepository.exists(username);
+    }
+
 }

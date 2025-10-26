@@ -1,6 +1,7 @@
 package vanilla.app.api.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.net.httpserver.Headers;
 import java.io.InputStream;
 import java.net.URI;
 import vanilla.app.api.Constants;
@@ -35,7 +36,20 @@ public class RegistrationHandler extends Handler {
     @Override
     protected ResponseEntity<RegistrationResponse> doPost(URI uri, InputStream is) {
         RegistrationRequest registerRequest = super.readRequest(is, RegistrationRequest.class);
-        var user = new User(registerRequest.getLogin(), PasswordEncoder.encode(registerRequest.getPassword()));
+
+        if (registerRequest.getUsername() == null) {
+            return new ResponseEntity(null, new Headers(), StatusCode.BAD_REQUEST);
+        }
+
+        if (registerRequest.getPassword() == null) {
+            return new ResponseEntity(null, new Headers(), StatusCode.BAD_REQUEST);
+        }
+
+        if (userService.exists(registerRequest.getUsername())) {
+            return new ResponseEntity(null, new Headers(), StatusCode.BAD_REQUEST);
+        }
+
+        var user = new User(registerRequest.getUsername(), PasswordEncoder.encode(registerRequest.getPassword()));
         user = userService.create(user);
         RegistrationResponse response = new RegistrationResponse(user.id);
 

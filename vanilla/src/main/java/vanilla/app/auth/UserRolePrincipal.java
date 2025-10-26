@@ -1,9 +1,8 @@
 package vanilla.app.auth;
 
+import com.sun.net.httpserver.HttpPrincipal;
 import java.util.Collections;
 import java.util.List;
-
-import com.sun.net.httpserver.HttpPrincipal;
 
 public class UserRolePrincipal extends HttpPrincipal {
 
@@ -11,6 +10,7 @@ public class UserRolePrincipal extends HttpPrincipal {
 
   public UserRolePrincipal(final String username, final String realm, final List<String> roles) {
     super(username, realm);
+    // TODO Collections.unmodifiableList vs List.copyOf
     this.roles = Collections.unmodifiableList(roles);
   }
   

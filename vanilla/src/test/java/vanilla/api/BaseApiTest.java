@@ -3,14 +3,14 @@ package vanilla.api;
 import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import vanilla.app.App;
+import vanilla.app.Server;
 import vanilla.app.config.RuntimeConfig.RunMode;
 import vanilla.app.dependency.DefaultDependencyFactory;
 import vanilla.app.dependency.DependencyFactory;
 
 public class BaseApiTest {
 
-    protected App app;
+    protected Server server;
     protected AppClient client;
     protected DependencyFactory dependencyFactory;
     // TODO read port from test.resources
@@ -21,17 +21,17 @@ public class BaseApiTest {
     @BeforeEach
     public void initializeApp() throws IOException {
         dependencyFactory = new DefaultDependencyFactory();
-        app = new App(PORT, MODE);
-        app.init(dependencyFactory);
-        app.start();
+        server = new Server(PORT, MODE);
+        server.init(dependencyFactory);
+        server.start();
         client = new AppClient(baseAddress);
     }
 
     @AfterEach
     public void stopApp() {
         dependencyFactory = null;
-        app.stop(0);
-        app = null;
+        server.stop(0);
+        server = null;
         client = null;
     }
 }
