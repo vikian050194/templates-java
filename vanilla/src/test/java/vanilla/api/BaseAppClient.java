@@ -55,7 +55,7 @@ public abstract class BaseAppClient {
     }
 
     private HttpRequest postRequest(String uri, byte[] data) throws URISyntaxException {
-        return HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofByteArray(data)).uri(getUri(uri)).build();
+        return HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofByteArray(data)).uri(getUri(uri)).setHeader("Authorization", "Basic %s".formatted(token)).build();
     }
 
     public HttpResponse<String> callGet(String uri) throws IOException, InterruptedException, URISyntaxException {
